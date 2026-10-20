@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wok &amp; Co. | Fresh from the wok</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#3d705c;--dark:#2b5242;--tint:#e6f0ea;--bg:#f1f6f3;--ink:#1d2e26;--muted:#5f736a}
+*{box-sizing:border-box}
+body{margin:0;font-family:Prompt,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+.hero{background:var(--green);color:#fff;padding:calc(48px + env(safe-area-inset-top,0px)) 0 84px;border-radius:0 0 44px 44px;position:relative;overflow:hidden}
+.hero::after{content:"🍜";position:absolute;right:-24px;bottom:-34px;font-size:190px;opacity:.14}
+.brand{font-weight:700;letter-spacing:.02em;opacity:.9}
+h1{font-size:clamp(2.6rem,10vw,4.6rem);line-height:1.02;margin:22px 0 14px;font-weight:700;letter-spacing:-.02em;max-width:11ch}
+.hero p{margin:0 0 28px;max-width:34ch;font-size:1.1rem;color:#d6e8de}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:15px 26px;border-radius:16px;font-weight:700;text-decoration:none}
+.btn.main{background:#fff;color:var(--green)}
+.btn.alt{background:#ffffff26;color:#fff}
+h2{font-size:1.4rem;margin:0 0 14px}
+.feat{margin-top:-44px;position:relative}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.card{background:#fff;border-radius:24px;padding:12px}
+.card .pic{display:grid;place-items:center;height:110px;border-radius:18px;background:var(--tint);font-size:56px}
+.card:nth-child(2) .pic{background:#d3e5db}
+.card b{display:block;margin:10px 4px 0}
+.card span{display:block;margin:2px 4px 4px;color:var(--green);font-weight:700}
+section{padding:36px 0 0}
+.steps{display:grid;gap:10px;padding:0;margin:0;list-style:none;counter-reset:s}
+.steps li{background:#fff;border-radius:20px;padding:16px 18px 16px 62px;position:relative;counter-increment:s}
+.steps li::before{content:counter(s);position:absolute;left:16px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700}
+.steps small{display:block;color:var(--muted)}
+.cta{margin:36px 0 0;background:var(--dark);color:#fff;border-radius:28px;padding:28px 22px;text-align:center}
+.cta h2{margin-bottom:16px}
+footer{padding:28px 0 calc(32px + env(safe-area-inset-bottom,0px));text-align:center;color:var(--muted);font-size:.9rem}
+footer a{color:var(--green)}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="brand">Wok &amp; Co.</div>
+  <h1>Fresh from the wok.</h1>
+  <p>Fried rice, noodles and Thai street favourites, cooked when you order. Pick up or get it delivered.</p>
+  <div class="btns">
+    <a class="btn main" href="food_order.html">Order now</a>
+    <a class="btn alt" href="#how">How it works</a>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <div class="feat">
+    <div class="cards">
+      <div class="card"><div class="pic">🦀</div><b>Crab fried rice</b><span>฿80</span></div>
+      <div class="card"><div class="pic">🍜</div><b>Small rice noodles</b><span>฿60</span></div>
+      <div class="card"><div class="pic">🧋</div><b>Thai iced tea</b><span>฿25</span></div>
+    </div>
+  </div>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><b>Choose your dishes</b><small>Browse the menu and add what you like.</small></li>
+      <li><b>Enter your details</b><small>Your name, phone and delivery address.</small></li>
+      <li><b>We cook and confirm</b><small>We call you to confirm, then start cooking.</small></li>
+    </ol>
+  </section>
+
+  <div class="cta">
+    <h2>Hungry?</h2>
+    <a class="btn main" href="food_order.html">Open the menu</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© Wok &amp; Co. · <a href="sentemail.html">Send us a message</a></div>
+</footer>
+</body>
+</html>
