@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wok &amp; Co. | Order Food</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6f3;--card:#fff;--ink:#14201b;--muted:#5b6b64;--green:#12372a;--chili:#e63b2e;--gold:#f4b942;--line:#dde6e0;--r:20px}
+*{box-sizing:border-box}
+body{margin:0;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:110px}
+h1,h2,h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif;margin:0}
+.hero{background:var(--green);color:#fff;padding:56px 20px 72px;border-radius:0 0 40px 40px;position:relative;overflow:hidden}
+.hero::after{content:"🔥";position:absolute;right:-10px;bottom:-30px;font-size:180px;opacity:.12}
+.wrap{max-width:720px;margin:0 auto}
+.hero h1{font-size:clamp(2.4rem,9vw,4rem);line-height:1;font-weight:800;letter-spacing:-.03em}
+.hero p{margin:14px 0 0;color:#bfd6cb;max-width:34ch;font-size:1.05rem}
+.badge{display:inline-block;background:var(--gold);color:var(--green);font-weight:700;border-radius:99px;padding:6px 14px;font-size:.85rem;margin-bottom:18px}
+main{margin-top:-36px;position:relative}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 20px 16px;scrollbar-width:none}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:10px 18px;border-radius:99px;font:inherit;font-weight:500;cursor:pointer;white-space:nowrap}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.list{padding:0 16px;display:grid;gap:12px}
+.item{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:var(--r);padding:14px;border:1px solid var(--line)}
+.item.on{border-color:var(--chili);box-shadow:0 0 0 2px #e63b2e22}
+.pic{flex:none;width:64px;height:64px;border-radius:18px;display:grid;place-items:center;font-size:34px;background:#fde9c4}
+.info{flex:1;min-width:0}
+.info h3{font-size:1.1rem}
+.info small{color:var(--muted)}
+.price{display:block;margin-top:4px;font-weight:700}
+.step{display:flex;align-items:center;gap:4px}
+.step button{width:38px;height:38px;border-radius:50%;border:none;font-size:1.3rem;cursor:pointer;background:var(--bg);color:var(--ink)}
+.step button.plus{background:var(--chili);color:#fff}
+.step output{min-width:24px;text-align:center;font-weight:700}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.panel{margin:28px 16px 0;background:var(--card);border-radius:var(--r);padding:22px;border:1px solid var(--line)}
+.panel h2{font-size:1.5rem;margin-bottom:14px}
+.line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line)}
+.empty{color:var(--muted);margin:0 0 10px}
+label{display:block;font-weight:500;margin-top:14px;font-size:.92rem}
+input.f,textarea.f{width:100%;margin-top:6px;padding:13px 14px;border:1.5px solid var(--line);border-radius:14px;font:inherit;background:#fbfdfc}
+.send{width:100%;margin-top:20px;padding:16px;border:none;border-radius:16px;background:var(--green);color:#fff;font:700 1.05rem 'DM Sans',sans-serif;cursor:pointer}
+.send:disabled{opacity:.5}
+#status{margin-top:14px;font-weight:700}.ok{color:#17803d}.err{color:var(--chili)}
+.bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:696px;margin:auto;background:var(--ink);color:#fff;border-radius:22px;padding:12px 12px 12px 22px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 12px 30px #0004;z-index:5}
+.bar b{font-size:1.25rem}.bar span{color:#a9b8b1;font-size:.85rem;display:block}
+.bar a{background:var(--chili);color:#fff;text-decoration:none;font-weight:700;padding:13px 22px;border-radius:16px}
+@media(prefers-reduced-motion:no-preference){.item,.chip{transition:border-color .15s,background .15s}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <span class="badge">Open today · 10:00–21:00</span>
+  <h1>Wok &amp; Co.</h1>
+  <p>Fresh from the wok. Pick your dishes, tell us who you are, and we start cooking.</p>
+</div></header>
+
+<main class="wrap">
+  <div class="chips" id="chips" role="group" aria-label="Menu categories"></div>
+  <div class="list" id="list"></div>
+
+  <form class="panel" id="orderForm" action="https://formspree.io/f/xnpnqjoq" method="POST">
+    <h2>Your order</h2>
+    <div id="summary"></div>
+    <label for="name">Name</label>
+    <input class="f" id="name" name="name" autocomplete="name" required>
+    <label for="phone">Phone</label>
+    <input class="f" id="phone" name="phone" type="tel" autocomplete="tel" required>
+    <label for="note">Note for the kitchen</label>
+    <textarea class="f" id="note" name="note" rows="3" placeholder="Less spicy, no peanuts…"></textarea>
+    <input type="hidden" name="_subject" value="New food order">
+    <input type="hidden" id="order" name="order">
+    <button class="send" id="sendBtn" type="submit">Place order</button>
+    <div id="status" role="status"></div>
+  </form>
+</main>
+
+<div class="bar">
+  <div><span id="count">0 items</span><b><span id="total" style="display:inline;color:#fff;font-size:inherit">0</span> THB</b></div>
+  <a href="#orderForm">View order</a>
+</div>
+
+<script>
+// Edit the menu here
+const MENU=[
+ {n:"Crab fried rice",th:"ข้าวผัดปู",p:80,c:"Rice",e:"🦀"},
+ {n:"Basil pork rice",th:"ข้าวกะเพราหมู",p:60,c:"Rice",e:"🍛"},
+ {n:"Small rice noodles",th:"ก๋วยเตี๋ยวเส้นเล็ก",p:60,c:"Noodles",e:"🍜"},
+ {n:"Pad Thai",th:"ผัดไทย",p:70,c:"Noodles",e:"🥢"},
+ {n:"Thai iced tea",th:"ชาเย็น",p:25,c:"Drinks",e:"🧋"},
+ {n:"Fresh coconut",th:"มะพร้าวน้ำหอม",p:35,c:"Drinks",e:"🥥"}
+];
+const qty=MENU.map(()=>0);
+let cat="All";
+const cats=["All",...new Set(MENU.map(m=>m.c))];
+const $=id=>document.getElementById(id);
+
+function renderChips(){
+  $("chips").innerHTML=cats.map(c=>`<button type="button" class="chip" aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("");
+}
+function renderList(){
+  $("list").innerHTML=MENU.map((m,i)=>m.c!==cat&&cat!=="All"?"":`
+   <div class="item ${qty[i]?'on':''}">
+     <div class="pic" aria-hidden="true">${m.e}</div>
+     <div class="info"><h3>${m.n}</h3><small>${m.th}</small><span class="price">${m.p} THB</span></div>
+     <div class="step">
+       <button type="button" data-i="${i}" data-d="-1" aria-label="Remove one ${m.n}" ${qty[i]?'':'hidden'}>−</button>
+       <output ${qty[i]?'':'hidden'}>${qty[i]}</output>
+       <button type="button" class="plus" data-i="${i}" data-d="1" aria-label="Add one ${m.n}">+</button>
+     </div>
+   </div>`).join("");
+}
+function totals(){
+  let t=0,n=0,lines=[];
+  MENU.forEach((m,i)=>{if(qty[i]){t+=m.p*qty[i];n+=qty[i];lines.push({t:`${m.n} × ${qty[i]}`,v:m.p*qty[i]})}});
+  return{t,n,lines};
+}
+function renderSummary(){
+  const {t,n,lines}=totals();
+  $("total").textContent=t;
+  $("count").textContent=n+(n===1?" item":" items");
+  $("summary").innerHTML=lines.length
+    ? lines.map(l=>`<div class="line"><span>${l.t}</span><span>${l.v} THB</span></div>`).join("")+`<div class="line"><b>Total</b><b>${t} THB</b></div>`
+    : `<p class="empty">Your order is empty. Add dishes from the menu above.</p>`;
+}
+$("chips").addEventListener("click",e=>{const b=e.target.closest("[data-c]");if(b){cat=b.dataset.c;renderChips();renderList()}});
+$("list").addEventListener("click",e=>{
+  const b=e.target.closest("[data-i]");if(!b)return;
+  const i=+b.dataset.i;qty[i]=Math.max(0,qty[i]+ +b.dataset.d);
+  renderList();renderSummary();
+  const nb=$("list").querySelector(`[data-i="${i}"][data-d="1"]`);if(nb)nb.focus();
+});
+$("orderForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const s=$("status"),{t,lines}=totals();
+  if(!lines.length){s.className="err";s.textContent="Add at least one dish before ordering.";return}
+  $("order").value=lines.map(l=>`${l.t} = ${l.v} THB`).join("\n")+`\nTotal: ${t} THB`;
+  const btn=$("sendBtn");btn.disabled=true;s.className="";s.textContent="Sending your order…";
+  try{
+    const r=await fetch(e.target.action,{method:"POST",body:new FormData(e.target),headers:{Accept:"application/json"}});
+    if(!r.ok)throw 0;
+    s.className="ok";s.textContent="Order sent. We'll call you to confirm.";
+    e.target.reset();qty.fill(0);renderList();renderSummary();
+  }catch(_){s.className="err";s.textContent="Order not sent. Check your connection and try again."}
+  btn.disabled=false;
+});
+renderChips();renderList();renderSummary();
+</script>
+</body>
+</html>
