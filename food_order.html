@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wok &amp; Co. | Order Food</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--green:#3d705c;--dark:#2b5242;--tint:#e6f0ea;--bg:#f1f6f3;--ink:#1d2e26;--muted:#5f736a;--line:#d9e5de;--err:#c0392b}
+*{box-sizing:border-box}
+body{margin:0;font-family:Prompt,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:110px}
+button{font:inherit;cursor:pointer;border:none}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto}
+.top{background:var(--green);color:#fff;padding:18px 16px 20px;border-radius:0 0 28px 28px}
+.loc small{color:#cfe3d8;display:block}
+.loc input{background:none;border:none;border-bottom:1.5px dashed #9bbdad;color:#fff;font:700 1.1rem Prompt;width:100%;padding:2px 0}
+.loc input::placeholder{color:#b5d0c3}
+.mode{display:flex;gap:8px;margin:14px 0}
+.mode button{padding:9px 18px;border-radius:99px;background:#ffffff26;color:#fff;font-weight:500}
+.mode button[aria-pressed=true]{background:#fff;color:var(--green);font-weight:700}
+.search{display:flex;align-items:center;gap:10px;background:#fff;border-radius:16px;padding:0 14px}
+.search input{flex:1;border:none;padding:14px 0;font:inherit;background:none;color:var(--ink)}
+.cats{display:flex;gap:6px;overflow-x:auto;padding:18px 16px 4px;scrollbar-width:none}
+.cat{flex:none;width:76px;background:none;color:var(--ink);text-align:center;font-size:.85rem}
+.cat i{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 6px;border-radius:22px;background:#fff;font-style:normal;font-size:30px;border:2px solid transparent}
+.cat[aria-pressed=true] i{border-color:var(--green);background:var(--tint)}
+.cat[aria-pressed=true]{font-weight:700;color:var(--green)}
+h2{font-size:1.25rem;margin:22px 16px 10px}
+.hot{display:flex;gap:12px;overflow-x:auto;padding:0 16px 6px;scrollbar-width:none}
+.hc{flex:none;width:150px;background:#fff;border-radius:22px;padding:8px;position:relative}
+.pic{display:grid;place-items:center;border-radius:16px;font-size:52px;background:var(--tint)}
+.hc:nth-child(even) .pic,.menu .row:nth-child(even) .pic{background:#d3e5db}
+.hc .pic{height:112px}
+.hc b{display:block;margin:8px 4px 0;font-size:.95rem;font-weight:500}
+.hc span,.row span{display:block;margin:2px 4px 6px;font-weight:700;color:var(--green)}
+.hc .ctl{position:absolute;right:12px;top:84px;background:#fff;border-radius:99px;box-shadow:0 2px 8px #2b524233}
+.promo{margin:20px 16px 0;background:linear-gradient(110deg,var(--dark),var(--green));color:#fff;border-radius:22px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.promo b{font-size:1.2rem;display:block}
+.promo button{background:#fff;color:var(--green);font-weight:700;padding:10px 16px;border-radius:14px;white-space:nowrap}
+.promo button[aria-pressed=true]{background:#ffffff33;color:#fff}
+.menu{display:grid;gap:10px;padding:0 16px}
+.row{display:flex;gap:14px;align-items:center;background:#fff;border-radius:22px;padding:10px}
+.row .pic{width:84px;height:84px;font-size:42px;flex:none}
+.row .t{flex:1;min-width:0}.row small{color:var(--muted)}
+.ctl{display:flex;align-items:center;gap:6px}
+.ctl button{width:34px;height:34px;border-radius:50%;background:var(--tint);color:var(--dark);font-size:1.2rem;line-height:1}
+.ctl button.p{background:var(--green);color:#fff}
+.ctl b{min-width:18px;text-align:center}
+.none{text-align:center;color:var(--muted);padding:30px}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--dark);color:#fff;border-radius:99px;padding:14px 20px;font-weight:700;display:flex;gap:10px;align-items:center;box-shadow:0 10px 28px #2b524255;z-index:5}
+.fab em{font-style:normal;background:#fff;color:var(--dark);border-radius:99px;min-width:26px;height:26px;display:grid;place-items:center;font-size:.85rem}
+.shade{position:fixed;inset:0;background:#10241c99;opacity:0;pointer-events:none;transition:opacity .2s;z-index:8}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:90vh;overflow:auto;background:#fff;border-radius:28px 28px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(105%);transition:transform .25s;z-index:9}
+.open .shade{opacity:1;pointer-events:auto}.open .sheet{transform:none}
+.sheet .in{max-width:560px;margin:0 auto;position:relative}
+.sheet h2{margin:0 0 10px}
+.ln{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line)}
+.ln.g{color:var(--green);font-weight:500}.ln.t{font-weight:700;font-size:1.15rem;border:none}
+label{display:block;margin-top:12px;font-size:.9rem;font-weight:500}
+.f{width:100%;margin-top:5px;padding:12px;border:1.5px solid var(--line);border-radius:14px;font:inherit}
+.send{width:100%;margin-top:18px;padding:15px;border-radius:16px;background:var(--green);color:#fff;font-weight:700;font-size:1.05rem}
+.send:disabled{opacity:.5}
+.x{position:absolute;right:0;top:-4px;background:var(--tint);width:36px;height:36px;border-radius:50%;font-size:1.1rem}
+#status{margin-top:12px;font-weight:700}.ok{color:var(--green)}.err{color:var(--err)}
+@media(prefers-reduced-motion:reduce){.sheet,.shade{transition:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="loc"><small id="locLabel">Deliver to</small>
+    <input id="addr" form="orderForm" name="address" placeholder="Enter your delivery address" autocomplete="street-address"></div>
+  <div class="mode" role="group" aria-label="Order type">
+    <button type="button" data-m="Delivery" aria-pressed="true">🛵 Delivery</button>
+    <button type="button" data-m="Pickup" aria-pressed="false">🥡 Pickup</button>
+  </div>
+  <label class="search" aria-label="Search dishes"><span aria-hidden="true">🔍</span><input id="q" type="search" placeholder="Search dishes"></label>
+</div></header>
+
+<main class="wrap">
+  <div class="cats" id="cats" role="group" aria-label="Categories"></div>
+  <h2>Best sellers</h2><div class="hot" id="hot"></div>
+  <div class="promo"><div><b>10% off your order</b>Use code WOK10</div><button type="button" id="promoBtn" aria-pressed="false">Get code</button></div>
+  <h2 id="mt">All dishes</h2><div class="menu" id="menu"></div>
+</main>
+
+<button class="fab" id="fab" type="button">🛒 Cart <em id="cnt">0</em></button>
+
+<div id="root">
+  <div class="shade" id="shade"></div>
+  <form class="sheet" id="orderForm" action="https://formspree.io/f/xnpnqjoq" method="POST" aria-label="Cart and checkout"><div class="in">
+    <button class="x" type="button" id="close" aria-label="Close">✕</button>
+    <h2>Your order</h2>
+    <div id="sum"></div>
+    <label for="name">Name</label><input class="f" id="name" name="name" autocomplete="name" required>
+    <label for="phone">Phone</label><input class="f" id="phone" name="phone" type="tel" autocomplete="tel" required>
+    <label for="note">Note for the kitchen</label><textarea class="f" id="note" name="note" rows="2" placeholder="e.g. less spicy, no peanuts"></textarea>
+    <input type="hidden" name="_subject" value="New food order">
+    <input type="hidden" id="order" name="order">
+    <button class="send" id="sendBtn" type="submit">Place order</button>
+    <div id="status" role="status"></div>
+  </div></form>
+</div>
+
+<script>
+// Edit the menu and prices here
+const MENU=[
+ {n:"Crab fried rice",sub:"Khao pad pu",p:80,c:"Rice",e:"🦀",hot:1},
+ {n:"Basil pork rice",sub:"Khao kra pao moo",p:60,c:"Rice",e:"🍛",hot:1},
+ {n:"Chicken rice",sub:"Khao man gai",p:55,c:"Rice",e:"🍗"},
+ {n:"Small rice noodles",sub:"Kuay teow sen lek",p:60,c:"Noodles",e:"🍜",hot:1},
+ {n:"Shrimp Pad Thai",sub:"Pad Thai goong",p:75,c:"Noodles",e:"🍤"},
+ {n:"Spring rolls",sub:"Po pia tod",p:45,c:"Snacks",e:"🥟"},
+ {n:"Fried chicken",sub:"Gai tod Hat Yai",p:65,c:"Snacks",e:"🍖",hot:1},
+ {n:"Thai iced tea",sub:"Cha yen",p:25,c:"Drinks",e:"🧋"},
+ {n:"Fresh coconut",sub:"Maprao nam hom",p:35,c:"Drinks",e:"🥥"}
+];
+const CATS=[["All","🍽️"],["Rice","🍚"],["Noodles","🍜"],["Snacks","🥟"],["Drinks","🧋"]];
+const FEE=20,FREE_OVER=200,PROMO=0.10;
+const qty=MENU.map(()=>0);
+let cat="All",q="",mode="Delivery",promo=false;
+const $=id=>document.getElementById(id);
+
+const inner=i=>qty[i]
+ ? `<button type="button" data-i="${i}" data-d="-1" aria-label="Remove one ${MENU[i].n}">−</button><b>${qty[i]}</b><button type="button" class="p" data-i="${i}" data-d="1" aria-label="Add one ${MENU[i].n}">+</button>`
+ : `<button type="button" class="p" data-i="${i}" data-d="1" aria-label="Add ${MENU[i].n}">+</button>`;
+const ctl=i=>`<div class="ctl">${inner(i)}</div>`;
+
+function renderCats(){$("cats").innerHTML=CATS.map(([c,e])=>`<button type="button" class="cat" data-c="${c}" aria-pressed="${c===cat}"><i>${e}</i>${c}</button>`).join("")}
+function renderHot(){$("hot").innerHTML=MENU.map((m,i)=>m.hot?`<div class="hc"><div class="pic">${m.e}</div><b>${m.n}</b><span>฿${m.p}</span>${ctl(i)}</div>`:"").join("")}
+function renderMenu(){
+  const list=MENU.map((m,i)=>({m,i})).filter(({m})=>(cat==="All"||m.c===cat)&&(m.n+m.sub).toLowerCase().includes(q));
+  $("menu").innerHTML=list.length?list.map(({m,i})=>`<div class="row"><div class="pic">${m.e}</div><div class="t"><b>${m.n}</b><br><small>${m.sub}</small><span>฿${m.p}</span></div>${ctl(i)}</div>`).join(""):`<div class="none">No dishes found. Try another word.</div>`;
+}
+function calc(){
+  const lines=[];let sub=0,n=0;
+  MENU.forEach((m,i)=>{if(qty[i]){lines.push([`${m.n} × ${qty[i]}`,m.p*qty[i]]);sub+=m.p*qty[i];n+=qty[i]}});
+  const disc=promo?Math.round(sub*PROMO):0;
+  const fee=mode==="Delivery"&&sub>0&&sub<FREE_OVER?FEE:0;
+  return{lines,sub,n,disc,fee,total:sub-disc+fee};
+}
+function renderSum(){
+  const c=calc();$("cnt").textContent=c.n;
+  $("sum").innerHTML=c.lines.length
+   ? c.lines.map(([t,v])=>`<div class="ln"><span>${t}</span><span>฿${v}</span></div>`).join("")
+     +(c.disc?`<div class="ln g"><span>Code WOK10</span><span>−฿${c.disc}</span></div>`:"")
+     +`<div class="ln"><span>${mode==="Delivery"?"Delivery fee":"Pickup"}</span><span>${c.fee?"฿"+c.fee:"Free"}</span></div>`
+     +`<div class="ln t"><span>Total</span><span>฿${c.total}</span></div>`
+   : `<p class="none">Your cart is empty. Add something tasty from the menu.</p>`;
+}
+function all(){renderHot();renderMenu();renderSum()}
+
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-i]");
+  if(a){const i=+a.dataset.i;qty[i]=Math.max(0,qty[i]+ +a.dataset.d);all();return}
+  const c=e.target.closest("[data-c]");
+  if(c){cat=c.dataset.c;$("mt").textContent=cat==="All"?"All dishes":cat;renderCats();renderMenu();return}
+  const m=e.target.closest("[data-m]");
+  if(m){mode=m.dataset.m;document.querySelectorAll("[data-m]").forEach(b=>b.setAttribute("aria-pressed",b===m));
+    const d=mode==="Delivery";$("addr").hidden=!d;$("addr").required=d;$("locLabel").textContent=d?"Deliver to":"Pick up at Wok & Co.";renderSum();return}
+});
+$("q").addEventListener("input",e=>{q=e.target.value.trim().toLowerCase();renderMenu()});
+$("promoBtn").addEventListener("click",e=>{promo=!promo;e.target.setAttribute("aria-pressed",promo);e.target.textContent=promo?"Saved ✓":"Get code";renderSum()});
+const open=v=>{$("root").className=v?"open":""};
+$("fab").onclick=()=>open(1);$("close").onclick=$("shade").onclick=()=>open(0);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")open(0)});
+$("addr").required=true;
+
+$("orderForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const s=$("status"),c=calc();
+  if(!c.lines.length){s.className="err";s.textContent="Add at least one dish before ordering.";return}
+  $("order").value=`Type: ${mode}\n`+c.lines.map(([t,v])=>`${t} = ${v} THB`).join("\n")
+    +(c.disc?`\nDiscount WOK10: -${c.disc} THB`:"")+`\nDelivery fee: ${c.fee} THB\nTotal: ${c.total} THB`;
+  const b=$("sendBtn");b.disabled=true;s.className="";s.textContent="Sending your order…";
+  try{
+    const r=await fetch(e.target.action,{method:"POST",body:new FormData(e.target),headers:{Accept:"application/json"}});
+    if(!r.ok)throw 0;
+    s.className="ok";s.textContent="Order sent. We'll call you to confirm shortly.";
+    e.target.reset();qty.fill(0);promo=false;$("promoBtn").setAttribute("aria-pressed",false);$("promoBtn").textContent="Get code";all();
+  }catch(_){s.className="err";s.textContent="Order not sent. Check your connection and try again."}
+  b.disabled=false;
+});
+renderCats();all();
+</script>
+</body>
+</html>
